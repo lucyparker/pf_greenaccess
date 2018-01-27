@@ -1,0 +1,11 @@
+from os greenspace data:
+  extract dundee records
+  extract locations, names
+  calculate distance between green spaces and data zones
+
+on map:
+  plot data zone boundaries (as data layers)
+  plot green spaces (as data layers)
+
+from data zone centroid list:
+  extract dundee data zone centroids

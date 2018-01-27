@@ -1,0 +1,18 @@
+map
+
+data zone centroids
+data zone boundaries
+
+plot/analyse:
+simd overall score
+simd health score 
+green space locations/access points
+
+for each green space (seperated by type):
+	data zones within 400 metres
+
+identify: 
+	data zones without 400m green space
+
+
+
