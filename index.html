@@ -15,9 +15,10 @@
   <div id="map"></div>
 <style>
   #map{
-    width: 960px;
-    height: 500px;
+    width: 1500px;
+    height: 750px;
   }
+
 </style>
 </head>
 
@@ -38,15 +39,16 @@
 
   var map = L.map('map', {
     center: [56.462354, -2.969330],
-    zoom: 12,
+    zoom: 13,
     layers: [basicMap]
   });
+
 
 
   var baseMaps = {
     "Basic Map": basicMap
   }
-  
+
 
   L.control.layers(overlayMaps).addTo(map);
 
@@ -123,7 +125,7 @@
     }
   })
 
-  simd16.addTo(map);
+  simd16_hb.addTo(map);
 
 
 
