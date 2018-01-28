@@ -11,7 +11,7 @@
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
-  <title>!!!!!</title>
+  <title>Dundee Green Spaces</title>
   <div id="map"></div>
 <style>
   #map{
@@ -24,43 +24,64 @@
 
 <body>
   <script type="text/javascript" src="greenspace_boundaries/greenspace_boundary.js"></script>
+  <script type="text/javascript" src="zones_w_data.js"></script>
+
 <script>
-  var map = L.map('map', {
-    center: [56.462354, -2.969330],
-    zoom: 12
+  var basicMap = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      maxZoom: 18,
+      id: 'mapbox.streets',
+      accessToken: 'pk.eyJ1IjoibGhwYXJrZXIiLCJhIjoiY2pjdzk1NTM2MTZ0eTJxcGdqdXBkMnRvdiJ9._i6eCDguhU07Q_qmsH_pWQ'
   });
 
-  L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    maxZoom: 18,
-    id: 'mapbox.streets',
-    accessToken: 'pk.eyJ1IjoibGhwYXJrZXIiLCJhIjoiY2pjdzk1NTM2MTZ0eTJxcGdqdXBkMnRvdiJ9._i6eCDguhU07Q_qmsH_pWQ'
-}).addTo(map);
 
-  L.geoJson(greenspace_boundary).addTo(map)
+
+  var map = L.map('map', {
+    center: [56.462354, -2.969330],
+    zoom: 12,
+    layers: [basicMap]
+  });
+
+
+  var baseMaps = {
+    "Basic Map": basicMap
+  }
+  
+
+  L.control.layers(overlayMaps).addTo(map);
+
+  var overlayMaps = {
+    "Greenspace": greenspace,
+    "SIMD16": simd16,
+    "SIMD16_HB": simd16_hb
+  };
+
+
+
+
 
 
 
   // control that shows state info on hover
-	var info = L.control();
+  var info = L.control();
 
-	info.onAdd = function (map) {
-		this._div = L.DomUtil.create('div', 'info');
-		this.update();
-		return this._div;
-	};
+  info.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info');
+    this.update();
+    return this._div;
+  };
 
-	info.update = function (props) {
-		this._div.innerHTML = '<h4>Greenspace Access</h4>' +  (props ?
-			'<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
-			: 'Hover over a boundary');
-	};
+  info.update = function (props) {
+    this._div.innerHTML = '<h4>Greenspace Access</h4>' +  (props ?
+      '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
+      : 'Hover over a boundary');
+  };
 
-	info.addTo(map);
+  info.addTo(map);
 
   // get color depending on feature type
   //"Cemetery", "Religious Grounds", "Play Space", "Public Park Or Garden", "Playing Field"]
-  L.geoJSON(greenspace_boundary, {
+  var greenspace = L.geoJSON(greenspace_boundary, {
       style: function(features) {
           switch (features.properties.function) {
               case 'Playing Field': return {color: "#018571"};   //light green
@@ -70,7 +91,45 @@
               case 'Public Park Or Garden':   return {color: "#4dac26"}; // dark green
           }
       }
-  }).addTo(map);
+  })
+
+
+
+  var simd16 = L.geoJSON(zones, {
+    style: function(features){
+      switch (features.properties.SIMD16_Quintile) {
+        case 1:   return {color: "#BD0026"};
+        case 2:   return {color: "#F03B20"};
+        case 3:   return {color: "#FD8D3C"};
+        case 4:   return {color: "#FECC5C"};
+        case 5:   return {color: "#FFFFB2"};
+      }
+
+    }
+  })
+
+
+
+  var simd16_hb = L.geoJSON(zones, {
+    style: function(features){
+      switch (features.properties.SIMD16_HB_Quintile) {
+        case 1:   return {color: "#253494"};
+        case 2:   return {color: "#2c7fb8"};
+        case 3:   return {color: "#41b6c4"};
+        case 4:   return {color: "#a1dab4"};
+        case 5:   return {color: "#ffffcc"};
+      }
+
+    }
+  })
+
+  simd16.addTo(map);
+
+
+
+
+
+
 
 
 
